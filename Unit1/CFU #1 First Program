@@ -1,0 +1,7 @@
+# Monday 9/9/2024
+# Period 5-6
+firstName = input("What is your first name?")
+lastName = input("What is your last name?")
+fullName = firstName + " " + lastName
+
+print("It's nice to meet you " + fullName + ".")
