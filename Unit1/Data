@@ -1,0 +1,21 @@
+# Monday 9/9/2024
+# Declaring a string variable
+course ="Programming & Prototyping"
+fname = "Nibrus" # string variable
+age = 55 # number variable
+fact = True # boolean variable
+# Input and Output functions
+
+# to Output, use key word print
+print(course) # will print the data inside the variable course
+print(11) # will print number
+
+print("Hello " + fname + "!") #  this is concatenation of string + variable
+
+# to input use the keyword input
+
+user_Name = input("What's your name?")
+
+print("Nice to meet you " + user_Name + "!")
+
+print(user_Name + " you are registered in Programming & Prototyping")
