@@ -6,4 +6,4 @@ print("C=",C," A=",A)
 rCyl = int(input("What is the radius of the cylinder?"))
 h = int(input("What is the height of the cylinder?"))
 v = rCyl**2*math.pi*h
-print("V=",v)
+print("V=",int(v))
