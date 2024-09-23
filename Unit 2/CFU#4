@@ -1,0 +1,10 @@
+import math
+name=input("What is your name?")
+a=int(input("What is the coefficient of x^2 in your standard form equation?"))
+b=int(input("What is the coefficient of x in your standard form equation?"))
+c=int(input("What is the last coefficient of your quadratic in your standard form equation?"))
+sqrtPosX=b**2-4*a*c
+sqrtNegX=b**2-4*a*c
+posX=(-b+(math.sqrt(sqrtPosX)))/(2*a)
+negX=(-b-(math.sqrt(sqrtNegX)))/(2*a)
+print("The answers are x =",posX,"and x =",negX)
