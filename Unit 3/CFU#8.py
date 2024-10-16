@@ -1,3 +1,9 @@
+""" 
+Nibrus Chowdhury
+10/15/2024
+Period 5-6
+Description: A program that asks if you ordered delivery and then calculates the cost per person if you did and split the bill.
+"""
 #Version 1
 print("Version 1:\n")
 ordDev = input("Did you order delivery? Yes or No")
