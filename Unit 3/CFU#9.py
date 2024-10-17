@@ -2,6 +2,7 @@
 Nibrus Chowdhury
 10/17/2024
 Period 5-6
+Explanation: The program plays a dice game with the user in which the user guesses what the computer's dice will roll and depending on if the user is right on not they gain points and the final points is displayed.
 """
 
 import random
