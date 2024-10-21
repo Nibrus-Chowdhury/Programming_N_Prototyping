@@ -2,7 +2,7 @@
 Nibrus Chowdhury
 10/21/24
 Period 5-6
-Description: User guesses a random number from 1 to 10 and the computer responds if that is high or low until the 
+Description: User guesses a random number from 1 to 10 and the computer responds if that is high or low until the user gets the answer 
 """
 import random
 
