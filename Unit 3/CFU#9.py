@@ -1,25 +1,37 @@
 """
 Nibrus Chowdhury
-10/17/2024
+10/19/2024
 Period 5-6
-Explanation: The program plays a dice game with the user in which the user guesses what the computer's dice will roll and depending on if the user is right on not they gain points and the final points is displayed.
+Description: This program rolls a dice through the random library and the user guesses a number from 1 to 6 and if they get it right then they get +6 points and if they get it wrong they get -1 point and the total is written at the end.
 """
-
 import random
 
-rolls = int(input("How many rolls do you want to do? In this game you have to guess the dice roll of the computer"))
-points = 0
+def randomNum():
+    return random.randint(1,6)
 
-for i in range(rolls):
-    def round():
-        x = random.randint(1,6)
-        global points
-        guess = int(input("What is your guess?"))
-        if guess == x:
-            points = points + 6
-            print("You are correct! +6 points")
-        else:
-            points = points - 1
-            print("You are incorrect! -1 points")
-    round()
-print("Your final score is: "+str(points))
+def guess(total):
+    user_guess = int(input("What's your guess? "))
+    roll = randomNum()
+    print(f"You rolled a {roll}")
+    
+    if user_guess == roll:
+        total += 6
+        print("Correct guess! +6 points.")
+    else:
+        total -= 1
+        print("Incorrect guess! -1 point.")
+  
+    return total
+
+def rolls(num_rolls, total):
+    if num_rolls == 0:
+        return total
+    else:
+        total = guess(total)
+        return rolls(num_rolls - 1, total)
+    
+    
+num_rolls = int(input("Let's play dice! How many times do you want to roll the dice?"))
+total = 0
+final_total = rolls(num_rolls, total)
+print(f"The total score is: {final_total}")
