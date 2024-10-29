@@ -6,14 +6,18 @@ Description: Asks the user for a password and if the password is not correct the
 """
 
 password = input("Enter Password: ")
+password1(password)
+global chance
 chance = 0
-while chance != 3:
-        if password == "simonsnyc":
-            print("Correct! You may enter...")
-            chance = 3
-        else:
-            print("Wrong Password!")
-            password = input("Enter Password: ")
-            chance += 1
-            if chance == 3:
-                print("Too many chances.")
+def chance():
+    if chance == 3:
+        print("Too many tries.")
+    else:
+        password1(password)
+def password1(password):
+    while password != "simonsnyc":
+        print("Wrong Password!")
+        password = input("Enter Password: ")
+        chance += 1
+        chance()
+    print("Correct! You may enter...")
