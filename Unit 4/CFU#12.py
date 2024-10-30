@@ -10,7 +10,7 @@ def check(password):
     if password == correct:
         print("Correct! You may enter...")
     else:
-        print("Wrong Password")
+        print("Wrong Password!")
 def attempts():
     attempts = 0
     while attempts < 3:
