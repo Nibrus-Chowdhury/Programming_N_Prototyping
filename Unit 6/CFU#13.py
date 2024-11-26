@@ -33,7 +33,7 @@ def draw_handler(canvas):
 
 #library.create_frame(title, width, height)
 
-frame = simplegui.create_frame("Python Colors",200,200)
+frame = simplegui.create_frame("CFU 13 Happy Dots",200,200)
 frame.set_canvas_background("rgb(0,255,255)")
 frame.set_draw_handler(draw_handler)
 frame.start()
