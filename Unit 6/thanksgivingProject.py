@@ -9,10 +9,53 @@ import simplegui
 # Frame setup
 frame = simplegui.create_frame("Thanksgiving Drawing", 600, 400)
 
+# Variables
+redishBrown = "#de5714"
+brown = "#a65c12"
+yellowishBrown = "#e8d138"
+orange = "#f29e0c"
+
 # Draw handler function
 def draw(canvas):
-    # Example: Drawing a circle
+    # Background
     canvas.draw_polygon([(0, 200), (0,400), (600, 400), (600, 200)], 1, "black", "green")
+    canvas.draw_polygon([(0, 0), (0,200), (600, 200), (600, 0)], 1, "black", "cyan")
+    # Trees
+    canvas.draw_polygon([(267.5, 255), (267.5, 105), (292.5, 105,), (292.5, 255)], 1, "black",brown)
+    canvas.draw_circle((280, 90), 60, 1, "black", orange)
+    x = 0
+    x2 = 0
+    x3 = 0
+    while x<=200:
+        canvas.draw_polygon([(170+x, 275), (170+x, 125), (195+x, 125,), (195+x, 275)], 1, "black",brown)
+        canvas.draw_circle((182.5+x, 105), 60, 1, "black", yellowishBrown)
+        canvas.draw_polygon([(100+x2, 150), (100+x2,300), (125+x2, 300), (125+x2, 150)], 1, "black", brown)
+        canvas.draw_circle((112.5+x2, 112.5), 60, 1, "black", redishBrown)
+        canvas.draw_polygon([(55+x3, 175), (55+x3, 325), (80+x3, 325), (80+x3, 175)], 1, "black", brown)
+        canvas.draw_circle((67.5+x3, 160), 60, 1, "black", "#606c38")
+        x = x + 200
+        x2 = x2+350
+        x3 = x3+440
+    # Turke Legs
+    canvas.draw_line((260,330),(260,355), 3, "black")
+    canvas.draw_line((300,330),(300,355), 3, "black")
+    canvas.draw_line((254,360),(259,355), 1, "black")
+    canvas.draw_line((260,363),(260,355), 1, "black")
+    canvas.draw_line((266,360),(261,355), 1, "black")
+    canvas.draw_line((294,360),(299,355), 1, "black")
+    canvas.draw_line((300,363),(300,355), 1, "black")
+    canvas.draw_line((306,360),(301,355), 1, "black")
+    
+    # Turkey Body
+    canvas.draw_circle((250, 275), 20, 1, "black", "#9a4606")
+    canvas.draw_circle((260, 265), 20, 1, "black", "#9a4606")
+    canvas.draw_circle((270, 260), 20, 1, "black", "#9a4606")
+    canvas.draw_circle((280, 260), 20, 1, "black", "#9a4606")
+    canvas.draw_circle((290, 265), 20, 1, "black", "#9a4606")
+    canvas.draw_circle((300, 275), 20, 1, "black", "#9a4606")
+    canvas.draw_circle((280, 300), 40, 1, "black", "grey")
+    
+    # Turkey Head
 
 # Assign draw handler to the frame
 frame.set_draw_handler(draw)
