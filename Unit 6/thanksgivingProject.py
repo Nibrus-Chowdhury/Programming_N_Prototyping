@@ -1,10 +1,14 @@
 '''
 Nibrus Chowdhury
 Period 5-6
-12/1/24
-Description: A thanksgiving scene created with the basic shape functions learned in class.
+12/2/24
+Description: A thanksgiving scene created with the basic shape functions learned in class. Scene includes
+a turkey and trees in a gradient going from the outside green leaves to the inside fall colored leaves. The
+turkey is in the middle with grass that is swaying in the wind, hence why it keeps moving. The turkey and the
+trees are strong however and do not budge to wind. Turkeys name is Arnold.
 '''
 import simplegui
+import random
 
 # Frame setup
 frame = simplegui.create_frame("Thanksgiving Drawing", 600, 400)
@@ -20,12 +24,20 @@ def draw(canvas):
     # Background
     canvas.draw_polygon([(0, 200), (0,400), (600, 400), (600, 200)], 1, "black", "green")
     canvas.draw_polygon([(0, 0), (0,200), (600, 200), (600, 0)], 1, "black", "cyan")
+    # Grass
+    for i in range(100):
+        grassX = random.randint(0,600)
+        grassY = random.randint(200,400)
+        canvas.draw_point((grassX,grassY), "lightgreen")
     # Trees
+        # Central Tree
     canvas.draw_polygon([(267.5, 255), (267.5, 105), (292.5, 105,), (292.5, 255)], 1, "black",brown)
     canvas.draw_circle((280, 90), 60, 1, "black", orange)
+        # Variable Initialization
     x = 0
     x2 = 0
     x3 = 0
+        # Loop that repeats twice to create two of the same trees off-set by a certain x value
     while x<=200:
         canvas.draw_polygon([(170+x, 275), (170+x, 125), (195+x, 125,), (195+x, 275)], 1, "black",brown)
         canvas.draw_circle((182.5+x, 105), 60, 1, "black", yellowishBrown)
@@ -36,7 +48,7 @@ def draw(canvas):
         x = x + 200
         x2 = x2+350
         x3 = x3+440
-    # Turke Legs
+    # Turkey Legs
     canvas.draw_line((260,330),(260,355), 3, "black")
     canvas.draw_line((300,330),(300,355), 3, "black")
     canvas.draw_line((254,360),(259,355), 1, "black")
@@ -55,8 +67,14 @@ def draw(canvas):
     canvas.draw_circle((300, 275), 20, 1, "black", "#9a4606")
     canvas.draw_circle((280, 300), 40, 1, "black", "grey")
     
-    # Turkey Head
-
+    # Turkey Head & Neck
+    canvas.draw_polygon([(300,280),(310,290),(335,265),(325,255)], 1, "grey", "grey")
+    canvas.draw_circle((330,260), 20, 1, "grey", "grey")
+    
+    # Turkey Eyes & Beak
+    canvas.draw_circle((345,260), 2, 1, "black", "black")
+    canvas.draw_polygon([(345, 275),(355,285),(350,270)], 1, "yellow", "yellow")
+    
 # Assign draw handler to the frame
 frame.set_draw_handler(draw)
 
