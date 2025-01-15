@@ -71,6 +71,7 @@ def newSceneRight():
 # Handler to draw on canvas
 def draw(canvas):
     if startScreen:
+        canvas.draw_image(startSceneBackground, (900 // 2, 600 // 2), (900, 600), (450, 300), (900, 600))
         canvas.draw_text('Controls:', (20, 30), 20, 'White')
         canvas.draw_text('W or Up Arrow - Go Up', (45, 55), 15, 'White')
         canvas.draw_text('A or Left Arrow - Go Left', (45, 75), 15, 'White')
@@ -106,7 +107,9 @@ def draw(canvas):
         canvas.draw_line((0,300),(450,300),10,"green")
         if x < 0:
             newSceneMiddleFromRight()
-    
+
+
+startSceneBackground = simplegui.load_image("https://media-hosting.imagekit.io//612c534ad2274622/file.png?Expires=1831565242&Key-Pair-Id=K2ZIVPTIP2VGHC&Signature=Tz4vRvNrS8C2E92Jz0~Cll4xceTCP9Hb0-va8BotgR3XcX2FFz7yAzNsr4fUMZR-XKhBJBtlEQ~7RyNSm-4ab0~zy2QNgxy40s5c74InVpLYvQqth2mWHaNKIJzVXhg8UPYOfu29IROF6c~8LFdK9c1a8HH0nMqtZAoAj0R-RuBq9Bu3-7gItJIyJVjwOrIk3BESBsB3p8ZIEVeZNBYvNg9gGM63aC-6T2a~DYUFHczTUksVzW8JJi5dJouqDVzvsTCmzu4wusT~87bSjqqmoicwNd9tzpektMupc26dbmwlZmEA-SH-lTFrJeVzX8fGBCRyI0gKN87sVAbtqfsaZQ__")
 
 # Create a frame and assign callbacks to event handlers
 frame = simplegui.create_frame("Home", 900, 600)
