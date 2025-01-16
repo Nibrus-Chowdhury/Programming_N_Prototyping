@@ -91,26 +91,27 @@ def draw(canvas):
     elif current_key == "D" or current_key == "'":
         x += 5
     if middle:
+        canvas.draw_image(shipBackground, (900 // 2, 600 // 2), (900, 600), (450, 300), (900, 600))
         canvas.draw_circle([x,y],30,1,"white","white")
-        canvas.draw_line((0,300),(900,300),10,"green")
         if x < 0:
             newSceneLeft()
         if x > 900:
             newSceneRight()
     if left:
+        canvas.draw_image(leftSceneBackground, (900 // 2, 600 // 2), (900, 600), (450, 300), (900, 600))
         canvas.draw_circle([x,y],30,1,"white","white")
-        canvas.draw_line((900,300),(450,300),10,"green")
         if x > 900:
             newSceneMiddleFromLeft()
     if right:
+        canvas.draw_image(shipBackground, (900 // 2, 600 // 2), (900, 600), (450, 300), (900, 600))
         canvas.draw_circle([x,y],30,1,"white","white")
-        canvas.draw_line((0,300),(450,300),10,"green")
         if x < 0:
             newSceneMiddleFromRight()
 
 
 startSceneBackground = simplegui.load_image("https://media-hosting.imagekit.io//612c534ad2274622/file.png?Expires=1831565242&Key-Pair-Id=K2ZIVPTIP2VGHC&Signature=Tz4vRvNrS8C2E92Jz0~Cll4xceTCP9Hb0-va8BotgR3XcX2FFz7yAzNsr4fUMZR-XKhBJBtlEQ~7RyNSm-4ab0~zy2QNgxy40s5c74InVpLYvQqth2mWHaNKIJzVXhg8UPYOfu29IROF6c~8LFdK9c1a8HH0nMqtZAoAj0R-RuBq9Bu3-7gItJIyJVjwOrIk3BESBsB3p8ZIEVeZNBYvNg9gGM63aC-6T2a~DYUFHczTUksVzW8JJi5dJouqDVzvsTCmzu4wusT~87bSjqqmoicwNd9tzpektMupc26dbmwlZmEA-SH-lTFrJeVzX8fGBCRyI0gKN87sVAbtqfsaZQ__")
-
+shipBackground = simplegui.load_image("https://media-hosting.imagekit.io//e84af1c9d95447a5/file.png?Expires=1831650822&Key-Pair-Id=K2ZIVPTIP2VGHC&Signature=ULYuhB6qey8f7EWTJDJlsThKMEJhMyl56saQQgYBJ6zT~LfGPzTnDrLhrok7OVg1WHO-a7StXIukoiv-Xw-77zbnT7MECFF9IV3AG11uFqwbHX76mvDqCr6tbWNNsLxB6cxO8QO8Bl0zZq9Me6TEru5jTVsv00MX~sEg5KAIF8ic2RsIKeVkgtYZPpsEcds5UDPBEQIg1kB7XznRBjS6q3li~VWwMeA70aBBjpCukcYWGRGVryWZG4W3VlPdnLkrV-vEnke23Ux7lT~xV6hWLoKPsWdVVsEVevCAJdZe0MS07Z808~ny5Lne7iS-Jb5UpgPcIZU-WbAFyzqBQUQHag__")
+leftSceneBackground = simplegui.load_image("https://media-hosting.imagekit.io//849e3ae783fd488a/Screenshot%202025-01-16%20at%2011-00-30%20Images%20for%20Project%20-%20Google%20Slides(1).png?Expires=1831651536&Key-Pair-Id=K2ZIVPTIP2VGHC&Signature=TiRzumfMDR8ZfdqDQBdR0CLy~nQT~r3sq1JweMaGOcuv1IWRnMSiV5aAsQ~jGek08~il5~JbMnahUD-IupGamdz3eyL5soNXz0LkDd5dkH8SrcoGOtv8U1V6tHfmKe0svkM1LCNhXY94be~jyHggD6~hJwhMt7g3lAmE6MOOjoofWIH6zLLewXYGTOdirHW2UQWScALSbfVbQ~Onv1ECEI1AfYR55Av-XYLiTsLKuN07nmb~n~6BEfulumZlNcrTXC7V4kLI1pKaUbFnuulja2tINElDQeze5iVoNU-w6rqkuxJPML9pkefBAOdWsn0uCPJIqes0yscQLsX49Y4u0Q__")
 # Create a frame and assign callbacks to event handlers
 frame = simplegui.create_frame("Home", 900, 600)
 frame.add_button("Start Game", start)
