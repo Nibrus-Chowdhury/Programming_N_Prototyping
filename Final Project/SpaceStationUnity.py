@@ -164,9 +164,17 @@ def draw(canvas):
         canvas.draw_text('S or Down Arrow  - Go Down', (45, 95), 15, 'White')
         canvas.draw_text('D or Right Arrow - Go Right', (45, 115), 15, 'White')
         canvas.draw_text('You are an astronaut aboard a spaceship, unfortunately the core of the ship has malfunctioned which leaves you in this spaceship ', (50, 200), 15, 'White')
-        canvas.draw_text('without any way to get back home. You are a crew of 4 and you must split resources amongst yourselves whilst finding the', (50, 220), 15, 'White')
-        canvas.draw_text('required materials outside the spaceship in space to fix the ship core and safely get back home.', (50, 240), 15, 'White')
-    
+        canvas.draw_text('without any way to get back home. You are a crew consisting of Adam, Emma, Levi, and yourself. You must split resources amongst ', (50, 220), 15, 'White')
+        canvas.draw_text('yourselves whilst finding the required gems outside the spaceship in space to fix the ship core and safely get back home.', (50, 240), 15, 'White')
+        canvas.draw_text('Objectives:', (50, 300), 20, 'White')
+        canvas.draw_text('- Find resources in space', (75, 330), 15, 'White')
+        canvas.draw_text('- Split resources among crew members', (75, 345), 15, 'White')
+        canvas.draw_text('- Find the 4 required gems in space to fix your ship core', (75, 360), 15, 'White')
+        canvas.draw_text('Mechanics:', (550, 300), 20, 'White')
+        canvas.draw_text('- Go left and right for different ship areas', (575, 330), 15, 'White')
+        canvas.draw_text('- Collect food floating in space', (575, 345), 15, 'White')
+        canvas.draw_text('- Collect water floating in space', (575, 360), 15, 'White')
+        canvas.draw_text('- Avoid asteroids in space', (575, 375), 15, 'White')
     # Variables for middle screen
     global food
     global water
