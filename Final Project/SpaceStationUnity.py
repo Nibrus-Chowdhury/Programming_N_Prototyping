@@ -9,6 +9,7 @@ import random
 import math
 
 z = 0
+g = 0
 # Resources
 health = 100
 inventory = ["No Blue Gem","No Pink Gem","No Purple Gem","No Pink Gem"]
@@ -165,14 +166,6 @@ def draw(canvas):
         canvas.draw_text('You are an astronaut aboard a spaceship, unfortunately the core of the ship has malfunctioned which leaves you in this spaceship ', (50, 200), 15, 'White')
         canvas.draw_text('without any way to get back home. You are a crew of 4 and you must split resources amongst yourselves whilst finding the', (50, 220), 15, 'White')
         canvas.draw_text('required materials outside the spaceship in space to fix the ship core and safely get back home.', (50, 240), 15, 'White')
-    if current_key == "W" or current_key == "&":
-        y -= 5
-    elif current_key == "S" or current_key == "(":
-        y += 5
-    elif current_key == "A" or current_key == "%":
-        x -= 5
-    elif current_key == "D" or current_key == "'":
-        x += 5
     
     # Variables for middle screen
     global food
@@ -180,11 +173,11 @@ def draw(canvas):
     global satisfaction
     global foodRequest
     global waterRequest
-    pressurePlateX = [200,450,650]
-    pressurePlateY = 250
+    pressurePlateX = [200,425,650]
+    pressurePlateY = 300
     pPDistance = 0
     pPDistances = [0,0,0]
-    
+    global g
     # Middle Screen Code
     if middle:
         canvas.draw_image(shipBackground, (900 // 2, 600 // 2), (900, 600), (450, 300), (900, 600))
@@ -201,22 +194,54 @@ def draw(canvas):
                     satisfaction[i] += 10
                     foodRequest[i] = random.randint(10,20)
                     waterRequest[i] = random.randint(10,20)
-        canvas.draw_circle([x,y],30,1,"white","white")
+        
+        # Character Movement
+        if current_key == "W" or current_key == "&":
+            g = 1
+            canvas.draw_image(characterUp, (315 // 2, 315 // 2), (315, 315), (x, y), (85, 85))
+            y -= 2
+        elif current_key == "S" or current_key == "(":
+            g = 2
+            canvas.draw_image(characterDown, (315 // 2, 315 // 2), (315, 315), (x, y), (85, 85))
+            y += 2
+        elif current_key == "A" or current_key == "%":
+            g = 3
+            canvas.draw_image(characterLeft, (315 // 2, 315 // 2), (315, 315), (x, y), (85, 85))
+            x -= 2
+        elif current_key == "D" or current_key == "'":
+            g = 4
+            canvas.draw_image(characterRight, (315 // 2, 315 // 2), (315, 315), (x, y), (85, 85))
+            x += 2
+        if g == 1:
+            canvas.draw_image(characterUp, (315 // 2, 315 // 2), (315, 315), (x, y), (85, 85))
+        elif g == 2:
+            canvas.draw_image(characterDown, (315 // 2, 315 // 2), (315, 315), (x, y), (85, 85))
+        elif g == 3:
+            canvas.draw_image(characterLeft, (315 // 2, 315 // 2), (315, 315), (x, y), (85, 85))
+        elif g == 4:
+            canvas.draw_image(characterRight, (315 // 2, 315 // 2), (315, 315), (x, y), (85, 85))
+            
         if x < 0:
             newSceneLeft()
         if x > 900:
             newSceneRight()
         
         # Satisfaction
-        canvas.draw_text(f'Satisfaction: {satisfaction[0]}%', (150, 150), 20, 'White')
-        canvas.draw_text(f'Request: {foodRequest[0]} Food', (150, 200), 20, 'White')
-        canvas.draw_text(f'{waterRequest[0]} Water', (225, 225), 20, 'White')
-        canvas.draw_text(f'Satisfaction: {satisfaction[1]}%', (400, 150), 20, 'White')
-        canvas.draw_text(f'Request: {foodRequest[1]} Food', (400, 200), 20, 'White')
-        canvas.draw_text(f'{waterRequest[1]} Water', (475, 225), 20, 'White')
-        canvas.draw_text(f'Satisfaction: {satisfaction[2]}%', (600, 150), 20, 'White')
-        canvas.draw_text(f'Request: {foodRequest[2]} Food', (600, 200), 20, 'White')
-        canvas.draw_text(f'{waterRequest[2]} Water', (675, 225), 20, 'White')
+        canvas.draw_text(f'Satisfaction: {satisfaction[0]}%', (150, 125), 20, 'White')
+        canvas.draw_text(f'Request: {foodRequest[0]} Food', (150, 250), 20, 'White')
+        canvas.draw_text(f'{waterRequest[0]} Water', (225, 275), 20, 'White')
+        canvas.draw_image(yellowAstro, (146 // 2, 263 // 2), (146, 263), (225, 180), (55, 85))
+        canvas.draw_text(f'Adam', (250, 175), 20, 'White')
+        canvas.draw_text(f'Satisfaction: {satisfaction[1]}%', (375, 125), 20, 'White')
+        canvas.draw_text(f'Request: {foodRequest[1]} Food', (375, 250), 20, 'White')
+        canvas.draw_text(f'{waterRequest[1]} Water', (450, 275), 20, 'White')
+        canvas.draw_text(f'Emma', (475, 175), 20, 'White')
+        canvas.draw_image(blueAstro, (153 // 2, 272 // 2), (153, 272), (450, 180), (55, 85))
+        canvas.draw_text(f'Satisfaction: {satisfaction[2]}%', (600, 125), 20, 'White')
+        canvas.draw_text(f'Request: {foodRequest[2]} Food', (600, 250), 20, 'White')
+        canvas.draw_text(f'{waterRequest[2]} Water', (675, 275), 20, 'White')
+        canvas.draw_image(redAstro, (123 // 2, 243 // 2), (123, 243), (680, 180), (50, 80))
+        canvas.draw_text(f'Levi', (705, 175), 20, 'White')
         canvas.draw_text(f'Total Food: {food}', (100, 500), 20, 'White')
         canvas.draw_text(f'Total Water: {water}', (100, 525), 20, 'White')
     
@@ -253,8 +278,32 @@ def draw(canvas):
     if left:
         canvas.draw_text(f'Health: {health}', (20, 30), 30, 'green')
         canvas.draw_image(leftSceneBackground, (900 // 2, 600 // 2), (900, 600), (450, 300), (900, 600))
-        canvas.draw_circle([x,y],30,1,"white","white")
         canvas.draw_text(f'Health: {health}', (20, 580), 20, 'green')
+        # Character Movement
+        if current_key == "W" or current_key == "&":
+            g = 1
+            canvas.draw_image(characterUp, (315 // 2, 315 // 2), (315, 315), (x, y), (85, 85))
+            y -= 2
+        elif current_key == "S" or current_key == "(":
+            g = 2
+            canvas.draw_image(characterDown, (315 // 2, 315 // 2), (315, 315), (x, y), (85, 85))
+            y += 2
+        elif current_key == "A" or current_key == "%":
+            g = 3
+            canvas.draw_image(characterLeft, (315 // 2, 315 // 2), (315, 315), (x, y), (85, 85))
+            x -= 2
+        elif current_key == "D" or current_key == "'":
+            g = 4
+            canvas.draw_image(characterRight, (315 // 2, 315 // 2), (315, 315), (x, y), (85, 85))
+            x += 2
+        if g == 1:
+            canvas.draw_image(characterUp, (315 // 2, 315 // 2), (315, 315), (x, y), (85, 85))
+        elif g == 2:
+            canvas.draw_image(characterDown, (315 // 2, 315 // 2), (315, 315), (x, y), (85, 85))
+        elif g == 3:
+            canvas.draw_image(characterLeft, (315 // 2, 315 // 2), (315, 315), (x, y), (85, 85))
+        elif g == 4:
+            canvas.draw_image(characterRight, (315 // 2, 315 // 2), (315, 315), (x, y), (85, 85))
         if x > 900:
             newSceneMiddleFromLeft()
             
@@ -333,10 +382,38 @@ def draw(canvas):
     # Right Screen Code
     if right:
         canvas.draw_image(shipBackground, (900 // 2, 600 // 2), (900, 600), (450, 300), (900, 600))
-        canvas.draw_circle([x,y],30,1,"white","white")
-        canvas.draw_text(f'Inventory: {inventory[0]} | {inventory[1]} | {inventory[2]} | {inventory[3]}', (100, 500), 20, 'White')
+        canvas.draw_image(shipCore, (677 // 2, 369 // 2), (677, 369), (450, 300), (400, 200))
+        canvas.draw_text(f'Inventory: {inventory[0]} | {inventory[1]} | {inventory[2]} | {inventory[3]}', (100, 500), 15, 'White')
+        # Character Movement
+        if current_key == "W" or current_key == "&":
+            g = 1
+            canvas.draw_image(characterUp, (315 // 2, 315 // 2), (315, 315), (x, y), (85, 85))
+            y -= 2
+        elif current_key == "S" or current_key == "(":
+            g = 2
+            canvas.draw_image(characterDown, (315 // 2, 315 // 2), (315, 315), (x, y), (85, 85))
+            y += 2
+        elif current_key == "A" or current_key == "%":
+            g = 3
+            canvas.draw_image(characterLeft, (315 // 2, 315 // 2), (315, 315), (x, y), (85, 85))
+            x -= 2
+        elif current_key == "D" or current_key == "'":
+            g = 4
+            canvas.draw_image(characterRight, (315 // 2, 315 // 2), (315, 315), (x, y), (85, 85))
+            x += 2
+        if g == 1:
+            canvas.draw_image(characterUp, (315 // 2, 315 // 2), (315, 315), (x, y), (85, 85))
+        elif g == 2:
+            canvas.draw_image(characterDown, (315 // 2, 315 // 2), (315, 315), (x, y), (85, 85))
+        elif g == 3:
+            canvas.draw_image(characterLeft, (315 // 2, 315 // 2), (315, 315), (x, y), (85, 85))
+        elif g == 4:
+            canvas.draw_image(characterRight, (315 // 2, 315 // 2), (315, 315), (x, y), (85, 85))
         if x < 0:
             newSceneMiddleFromRight()
+        if inventory[0] == "Blue Gem Acquired" and inventory[1] == "Pink Gem Acquired" and inventory[2] == "Purple Gem Acquired" and inventory[3] == "Red Gem Acquired":
+            canvas.draw_polygon([(0,0),(900,0),(900,600),(0,600)],1,'black','black')
+            canvas.draw_text('You Fixed the Engine!', (300, 300), 50, 'white')
     
     
     if endScreen:
@@ -363,11 +440,12 @@ characterUp = simplegui.load_image("https://media-hosting.imagekit.io//29b244212
 characterDown = simplegui.load_image("https://media-hosting.imagekit.io//50ab470f5f9f476e/downspaceman.png?Expires=1831694745&Key-Pair-Id=K2ZIVPTIP2VGHC&Signature=PIuROY9HLqZF9V4EyPQWCY1NVXhHhf2J-jjUm0l3leRcvHY0Y4MPD46-0TQ~mypnZ7bEaslJiy~TyyEZ5Ta8veJkSLWRwJugtbKf6~Q1p4yz74qQcg6eO54JI71K889VVQzofBag~bT-j9Sn-Z0sCBg4D3A~7nlFn-74C5tDFUO81KVbyeSDIG2lScazGc9np0PpOhbC7o0DC7KtBRxjFmOHnayA~26s-Grkzsq1WFO7-a~aOZ9EPSGSwAwocuMLQveD-b~VItyhGZtEV6I6B0QxPRlpd5TCtJfpsGJFEqMUpyGN1kwmlW8zMMoi69wdY7k5SO~5aKrAuiV2f0gt8g__")
 characterLeft = simplegui.load_image("https://media-hosting.imagekit.io//8653378712664045/leftspaceman.png?Expires=1831694745&Key-Pair-Id=K2ZIVPTIP2VGHC&Signature=zPing5FKemyXYzSldDsXRAbQNfyfOVlfv89UDiq9XsJpjQ6LxIJzvteh2HBcgPZ4qavD9FP3auzAE8rI6YSclekexNLFuMfkzUuv1NeKYZvrOuKByPeCZ1QsEYhZqAkW~p-J7P~cEmGjzgs70t8YH5FIsNZUnRsGPZitPdHDETA13Wu5U04cGH0qGc4LwMcYmbOdSqupFtfesdSua7-vFT~00eMNNtf4mY97D6YuxWfCsRIGVl1GqLpC~yTozs2eXDTlFm4tIKUdhBIVN8t1T4VC7wg17Kr5X4NWA1p9QTOFhQ5chnVKCZFqaTGcvgVfjyI0PVQ~vXpZzPLV9T1G0w__")
 characterRight = simplegui.load_image("https://media-hosting.imagekit.io//6160d96ef85a422c/rightspaceman.png?Expires=1831694745&Key-Pair-Id=K2ZIVPTIP2VGHC&Signature=nAXYnOobUOTVXuJt2B3zoUTdYgkHhmsx0AxAofr3o-s2tAD9kzoP~L-BspuJPbfIfCPBLARzqTb6QIvvJSpXjr~RdSRXPHGSoQfmDZdHvxn96PSAhCDO41xu3Klq5DxvLDZWJ7Cu301tjN-06wmJBORzZDdqetVAaJZ-qGclJX8wEKG~FMYvHF~Q9Aatd2TD86LZB7szMHnm7MMUQcxpabTdSUuuyQOB~Jpa9cvUvudPQ5qmECKCNzZWd-kXg~BaKzuItZco0~gRqvFoZSR72EPHkM24krILYE6nF-OHVbrBYYV7AJzxyo5HbZjuKdf2wBBW19ENOzSVBJykkT2G1Q__")
+shipCore = simplegui.load_image("https://media-hosting.imagekit.io//6cb3fd9fcfa64c69/image_fx__2_-removebg-preview.png?Expires=1831697123&Key-Pair-Id=K2ZIVPTIP2VGHC&Signature=HbCts4GOusERHTq7pAFcEB08OTlStmqhrRibXQkQ1qMcsimX02eBwJNd2sc8-U6nXBDCE5GTBqG45yz8ZvyjkiBGk6Gt-I97mpyon-N1okSNLAjjDoUWnR91udTuUIhsP6~XyeJKteqg5TuwrIWycQNyNfOgB3IP2IxWxj1qDyK-G-0~wc0fe5K~DlgjP3YIYXaFzqUMa1rdzA87IH3NWRmAE8KdpyUDjR0HXFw5p3RzdLilS7A08ccsb2KZ5E0bm-YsvqCD-DSRrah0XSmSN7I14aEv-EtCr9ta6BpCZKc3Xg~FsitEIMYX9dx3r4jYxg-VCaKQiRTH5PRNj6tgTg__")
 
 # Create a frame and assign callbacks to event handlers
 frame = simplegui.create_frame("Home", 900, 600)
 timer = simplegui.create_timer(random.randint(5000,15000), satisfactionLevel)
-gemTimer = simplegui.create_timer(10000, gemSpawn)
+gemTimer = simplegui.create_timer(random.randint(25000,45000), gemSpawn)
 frame.add_button("Start Game", start)
 frame.set_keydown_handler(keydown)
 frame.set_keyup_handler(keyup)
