@@ -8,17 +8,24 @@ import simplegui
 import random
 import math
 
+# Resources
 health = 100
 inventory = []
 food = 0
+water = 0
 
+# Player Movement
 x = 250
 y = 250
+
+# All Screens
 startScreen = True
 left = False
 middle = False
 right = False
 endScreen = False
+
+# Asteroid Variables
 astX = []
 astY = []
 astRotation = []
@@ -26,6 +33,8 @@ for i in range(7):
     astX.append(random.randint(10,450))
     astY.append(random.randint(0,600))
     astRotation.append(random.randint(0,360))
+
+# Food Variables
 foodX = []
 foodY = []
 foodRotation = []
@@ -33,7 +42,24 @@ for i in range(4):
     foodX.append(random.randint(10,450))
     foodY.append(random.randint(0,600))
     foodRotation.append(random.randint(0,360))
+
+# Water Variables
+waterX = []
+waterY = []
+waterRotation = []
+for i in range(4):
+    waterX.append(random.randint(10,450))
+    waterY.append(random.randint(0,600))
+    waterRotation.append(random.randint(0,360))
 current_key = ' '
+
+# Middle Screen Initialization Variables
+satisfaction1 = 100
+satisfaction2 = 100
+satisfaction3 = 100
+request1 = 4
+request2 = 6
+request3 = 1
 
 # Handler
 def start():
@@ -95,6 +121,42 @@ def endScene():
     left = not left
     endScreen = not endScreen
 
+def satisfactionIncrease():
+    pass
+
+def satisfactionLevel():
+    global satisfaction1
+    global satisfaction2
+    global satisfaction3
+    global right
+    global middle
+    global left
+    global endScene
+    satisfaction1 -= random.randint(1,5)
+    satisfaction2 -= random.randint(1,5)
+    satisfaction3 -= random.randint(1,5)
+    if satisfaction1 <= 0:
+        right = False
+        left = False
+        middle = False
+        endScene = True
+    elif satisfaction2 <= 0:
+        right = False
+        left = False
+        middle = False
+        endScene = True
+    elif satisfaction3 <= 0:
+        right = False
+        left = False
+        middle = False
+        endScene = True
+    if satisfaction1 > 100:
+        satisfaction1 = 100
+    elif satisfaction2 > 100:
+        satisfaction2 = 100
+    elif satisfaction3 > 100:
+        satisfaction3 = 100
+    
 # Handler to draw on canvas
 def draw(canvas):
     global x
@@ -121,29 +183,66 @@ def draw(canvas):
     elif current_key == "D" or current_key == "'":
         x += 5
     
+    # Variables for middle screen
+    global food
+    global water
+    global satisfaction1
+    global satisfaction2
+    global satisfaction3
+    global request1
+    global request2
+    global request3
+    pressurePlate1X = 200
+    pressurePlate1Y = 250
+    pressurePlate2X = 450
+    pressurePlate2Y = 250
+    pressurePlate3X = 650
+    pressurePlate3Y = 250
+    pPDistance1 = 0
+    waterDistances = [0,0,0,0]
     
     # Middle Screen Code
     if middle:
         canvas.draw_image(shipBackground, (900 // 2, 600 // 2), (900, 600), (450, 300), (900, 600))
+        canvas.draw_image(pressurePlate, (44 // 2, 34 // 2), (44, 34), (pressurePlate1X, pressurePlate1Y), (44, 34))
+        canvas.draw_image(pressurePlate, (44 // 2, 34 // 2), (44, 34), (pressurePlate2X, pressurePlate2Y), (44, 34))
+        canvas.draw_image(pressurePlate, (44 // 2, 34 // 2), (44, 34), (pressurePlate3X, pressurePlate3Y), (44, 34))
         canvas.draw_circle([x,y],30,1,"white","white")
         if x < 0:
             newSceneLeft()
         if x > 900:
             newSceneRight()
+        
+        # Satisfaction
+        canvas.draw_text(f'Satisfaction: {satisfaction1}%', (150, 150), 20, 'White')
+        canvas.draw_text(f'Request: {request1} Food', (150, 200), 20, 'White')
+        canvas.draw_text(f'Satisfaction: {satisfaction2}%', (400, 150), 20, 'White')
+        canvas.draw_text(f'Request: {request2} Food', (400, 200), 20, 'White')
+        canvas.draw_text(f'Satisfaction: {satisfaction3}%', (600, 150), 20, 'White')
+        canvas.draw_text(f'Request: {request3} Food', (600, 200), 20, 'White')
+        canvas.draw_text(f'Total Food: {food}', (100, 500), 20, 'White')
     
     
     # Variables for left screen
+        # Asteroid Variables
     global astX
     global astY
     global astRotation
     astDistance = 0
     astDistances = [0,0,0,0,0,0,0]
-    global food
+        # Food Variables
     global foodX
     global foodY
     global foodRotation
     foodDistance = 0
     foodDistances = [0,0,0,0]
+        # Water Variables
+    global water
+    global waterX
+    global waterY
+    global waterRotation
+    waterDistance = 0
+    waterDistances = [0,0,0,0]
     global health
     
     # Left Screen Code
@@ -185,7 +284,21 @@ def draw(canvas):
                 food += 1
                 foodY[j] = -30
                 foodX[j] = random.randint(0,450)
-    
+       
+        # Water
+        for w in range(4):    
+            canvas.draw_image(waterImg, (96 / 2, 96 / 2), (96, 96), (waterX[w], waterY[w]), (35, 35), waterRotation[w])
+            waterY[w] += 1
+            waterRotation[w] += 0.01
+            if waterY[w] == 650:
+                waterY[w] = -30
+                waterX[w] = random.randint(0,450)
+            waterDistance = math.sqrt((waterX[w]-x)**2+(waterY[w]-y)**2)
+            waterDistances[w] = waterDistance
+            if waterDistances[w] < 50:
+                water += 1
+                waterY[w] = -30
+                waterX[w] = random.randint(0,450)
     
     # Right Screen Code
     if right:
@@ -205,12 +318,18 @@ shipBackground = simplegui.load_image("https://media-hosting.imagekit.io//e84af1
 leftSceneBackground = simplegui.load_image("https://media-hosting.imagekit.io//849e3ae783fd488a/Screenshot%202025-01-16%20at%2011-00-30%20Images%20for%20Project%20-%20Google%20Slides(1).png?Expires=1831651536&Key-Pair-Id=K2ZIVPTIP2VGHC&Signature=TiRzumfMDR8ZfdqDQBdR0CLy~nQT~r3sq1JweMaGOcuv1IWRnMSiV5aAsQ~jGek08~il5~JbMnahUD-IupGamdz3eyL5soNXz0LkDd5dkH8SrcoGOtv8U1V6tHfmKe0svkM1LCNhXY94be~jyHggD6~hJwhMt7g3lAmE6MOOjoofWIH6zLLewXYGTOdirHW2UQWScALSbfVbQ~Onv1ECEI1AfYR55Av-XYLiTsLKuN07nmb~n~6BEfulumZlNcrTXC7V4kLI1pKaUbFnuulja2tINElDQeze5iVoNU-w6rqkuxJPML9pkefBAOdWsn0uCPJIqes0yscQLsX49Y4u0Q__")
 asteroid = simplegui.load_image("https://media-hosting.imagekit.io//d32f66fb284d4efb/Asteroid%2001%20-%20Base.png?Expires=1831652413&Key-Pair-Id=K2ZIVPTIP2VGHC&Signature=S5BHK8sgNLqun6Urfp5e4gkWZXlclrC6qoUZQ6iLR-StUDvgJpGfzTam3qwtSIlrTuT5tp7cLzoUjD6Fpu37hi7veeOd9K-EiHGZ607W2oz-xpa2o52JsYgoDV~2sWXZH9qzBnUU~cutV5EmWW4k~4k7YtUdgU5DcBKin-anEx2lyTnxu5D7knuwB596GdlCbGYHw6wYmDzfuJM6xHj2rZUL7P4Hr7hEdO~SeDMSl7xbORxxoSy1vfVffcze0t~~8L75xm5N8uipglP-eDl7JAsKLDHGGE0O-T717m5pztn4qi4gbb7xMICxQcx5uibstCdTSGMezaT69VhmrbhqVA__")
 foodImg = simplegui.load_image("https://media-hosting.imagekit.io//c2e2671ce14440a6/Apple.png?Expires=1831660587&Key-Pair-Id=K2ZIVPTIP2VGHC&Signature=p4kJBKpF8PcKmNYh8uuQwDqbk08dpWtSRy2orA2HhXrawYZD7WxIG3tihQBqd-ZloMM8wj6mZGVVrNrUwbhSD-CZ4Cc1y9kBTukXYWToFovIUf0GOO5neGc3jqBuTa~P3zoNrASYbKImJeTMZ7faCAVCZFuWJIOvwAjSOzNuWiaPDdcCDpCm09a~Ms523KGKlusHVtdcKrtp6MQ7v4LvMN8APZdH6Y-Fx3x6bifjFgi3t-ULUaUuh5kQ7nNHDnOGxmWBT-x3~k72JMfESmuYDYBgdi1TUjxf9~A9wwnnuBlGgmH-MOT2V7L0Y5WmhewWYFfyjHdfw4V3NELLHbPoBQ__")
+waterImg = simplegui.load_image("https://media-hosting.imagekit.io//aa0be2c619154052/bottle_1_-removebg-preview.png?Expires=1831683845&Key-Pair-Id=K2ZIVPTIP2VGHC&Signature=vXa5oAE~Y6fRw8qS7RTD1Rt~xNc3ErWNCUBra0SJZ-Xk9ajGQ1HG2HidADT-rLUaPud~xJ4DFCJPbhvVYhpq0JEFQfETZCnsW88eyYPiD4B0C0aqW2-y4mSoXHOhiXsp5tvf286OVQ3YP8ZMnzUHfzaGhPulYyTi6DbPl30Rw23GYjuHad8UJQD9mlXFTalFI9Jxax~NxHntu-JCJs9k4EZjxdH~qXURqYailmDg1Dd39aIbtEm3N2AdDcs6b1m8zj00kRpIMJIqsOBMF1yQWrRYYh-i~z3WoGBKEiABAL5kTNNpVeaWQM2KdUe1CvWlQW-c2Fv2QMZ8bkl-ydZC9Q__")
+pressurePlate = simplegui.load_image("https://media-hosting.imagekit.io//921ad7c09e1e4d36/Screenshot%202025-01-16%20203741.png?Expires=1831685882&Key-Pair-Id=K2ZIVPTIP2VGHC&Signature=QBvOH3~a5b9ypgDAOZyfDpAbk3Ve0UgguITWVp6mGIW167at5cAfYaB3IBLa327TFyENLEdJD9HFwR3gTcsTCvj7mVg1-kP7t-G7yBpPfHzQzml4z1c3PjKbrGN1ViMfVhtWp6AKDr-FE8gpmqlVreSkc-Gl4-DxMMaIRx3O0I1RQm3Imt4jluKudPTdGKBLvD3hXvgqXIGCrgas9bK~jTeUCF3m7LrxygYYC8L5OMoQZKAef4bb9dujskBwQNd3kQXYxsj1u0CqJLNSxozvleZhp9UOWrJL2L0gTXgJ4JZ59kPqWROQ4j5ZH8NpN1nnmjICTqnxPdZpo7jz1wl3yw__")
 # Create a frame and assign callbacks to event handlers
 frame = simplegui.create_frame("Home", 900, 600)
+timer = simplegui.create_timer(10000, satisfactionLevel)
 frame.add_button("Start Game", start)
 frame.set_keydown_handler(keydown)
 frame.set_keyup_handler(keyup)
 frame.set_draw_handler(draw)
 
+
+
 # Start the frame animation
 frame.start()
+timer.start()
