@@ -8,9 +8,10 @@ import simplegui
 import random
 import math
 
+z = 0
 # Resources
 health = 100
-inventory = []
+inventory = ["No Blue Gem","No Pink Gem","No Purple Gem","No Pink Gem"]
 food = 0
 water = 0
 
@@ -33,7 +34,11 @@ for i in range(7):
     astX.append(random.randint(10,450))
     astY.append(random.randint(0,600))
     astRotation.append(random.randint(0,360))
-
+# Gem Variables
+gemX = 250
+gemY = -30
+gemRotation = 0
+spawn = 0
 # Food Variables
 foodX = []
 foodY = []
@@ -54,12 +59,9 @@ for i in range(4):
 current_key = ' '
 
 # Middle Screen Initialization Variables
-satisfaction1 = 100
-satisfaction2 = 100
-satisfaction3 = 100
-request1 = 4
-request2 = 6
-request3 = 1
+satisfaction = [100,100,100]
+foodRequest = [12,24,15]
+waterRequest = [8, 12, 13]
 
 # Handler
 def start():
@@ -121,42 +123,31 @@ def endScene():
     left = not left
     endScreen = not endScreen
 
-def satisfactionIncrease():
-    pass
-
 def satisfactionLevel():
-    global satisfaction1
-    global satisfaction2
-    global satisfaction3
+    global satisfaction
     global right
     global middle
     global left
     global endScene
-    satisfaction1 -= random.randint(1,5)
-    satisfaction2 -= random.randint(1,5)
-    satisfaction3 -= random.randint(1,5)
-    if satisfaction1 <= 0:
-        right = False
-        left = False
-        middle = False
-        endScene = True
-    elif satisfaction2 <= 0:
-        right = False
-        left = False
-        middle = False
-        endScene = True
-    elif satisfaction3 <= 0:
-        right = False
-        left = False
-        middle = False
-        endScene = True
-    if satisfaction1 > 100:
-        satisfaction1 = 100
-    elif satisfaction2 > 100:
-        satisfaction2 = 100
-    elif satisfaction3 > 100:
-        satisfaction3 = 100
-    
+    for i in range(3):
+        satisfaction[i] -= random.randint(1,5)
+        if satisfaction[i] <= 0:
+            right = False
+            left = False
+            middle = False
+            endScene = True
+        if satisfaction[i] > 100:
+            satisfaction[i] = 100
+            
+def gemSpawn():
+    global z
+    global spawn
+    z = 0
+    z += 1
+    spawn = random.randint(0,3)
+    print(z)
+            
+
 # Handler to draw on canvas
 def draw(canvas):
     global x
@@ -186,27 +177,30 @@ def draw(canvas):
     # Variables for middle screen
     global food
     global water
-    global satisfaction1
-    global satisfaction2
-    global satisfaction3
-    global request1
-    global request2
-    global request3
-    pressurePlate1X = 200
-    pressurePlate1Y = 250
-    pressurePlate2X = 450
-    pressurePlate2Y = 250
-    pressurePlate3X = 650
-    pressurePlate3Y = 250
-    pPDistance1 = 0
-    waterDistances = [0,0,0,0]
+    global satisfaction
+    global foodRequest
+    global waterRequest
+    pressurePlateX = [200,450,650]
+    pressurePlateY = 250
+    pPDistance = 0
+    pPDistances = [0,0,0]
     
     # Middle Screen Code
     if middle:
         canvas.draw_image(shipBackground, (900 // 2, 600 // 2), (900, 600), (450, 300), (900, 600))
-        canvas.draw_image(pressurePlate, (44 // 2, 34 // 2), (44, 34), (pressurePlate1X, pressurePlate1Y), (44, 34))
-        canvas.draw_image(pressurePlate, (44 // 2, 34 // 2), (44, 34), (pressurePlate2X, pressurePlate2Y), (44, 34))
-        canvas.draw_image(pressurePlate, (44 // 2, 34 // 2), (44, 34), (pressurePlate3X, pressurePlate3Y), (44, 34))
+        canvas.draw_image(pressurePlate, (44 // 2, 34 // 2), (44, 34), (pressurePlateX[0], pressurePlateY), (44, 34))
+        canvas.draw_image(pressurePlate, (44 // 2, 34 // 2), (44, 34), (pressurePlateX[1], pressurePlateY), (44, 34))
+        canvas.draw_image(pressurePlate, (44 // 2, 34 // 2), (44, 34), (pressurePlateX[2], pressurePlateY), (44, 34))
+        for i in range(3):
+            pPDistance = math.sqrt((pressurePlateX[i]-x)**2+(pressurePlateY-y)**2)
+            pPDistances[i] = pPDistance
+            if pPDistances[i] < 50:
+                if food >= foodRequest[i] and water >= waterRequest[i]:
+                    food = food - foodRequest[i]
+                    water = water - waterRequest[i]
+                    satisfaction[i] += 10
+                    foodRequest[i] = random.randint(10,20)
+                    waterRequest[i] = random.randint(10,20)
         canvas.draw_circle([x,y],30,1,"white","white")
         if x < 0:
             newSceneLeft()
@@ -214,13 +208,17 @@ def draw(canvas):
             newSceneRight()
         
         # Satisfaction
-        canvas.draw_text(f'Satisfaction: {satisfaction1}%', (150, 150), 20, 'White')
-        canvas.draw_text(f'Request: {request1} Food', (150, 200), 20, 'White')
-        canvas.draw_text(f'Satisfaction: {satisfaction2}%', (400, 150), 20, 'White')
-        canvas.draw_text(f'Request: {request2} Food', (400, 200), 20, 'White')
-        canvas.draw_text(f'Satisfaction: {satisfaction3}%', (600, 150), 20, 'White')
-        canvas.draw_text(f'Request: {request3} Food', (600, 200), 20, 'White')
+        canvas.draw_text(f'Satisfaction: {satisfaction[0]}%', (150, 150), 20, 'White')
+        canvas.draw_text(f'Request: {foodRequest[0]} Food', (150, 200), 20, 'White')
+        canvas.draw_text(f'{waterRequest[0]} Water', (225, 225), 20, 'White')
+        canvas.draw_text(f'Satisfaction: {satisfaction[1]}%', (400, 150), 20, 'White')
+        canvas.draw_text(f'Request: {foodRequest[1]} Food', (400, 200), 20, 'White')
+        canvas.draw_text(f'{waterRequest[1]} Water', (475, 225), 20, 'White')
+        canvas.draw_text(f'Satisfaction: {satisfaction[2]}%', (600, 150), 20, 'White')
+        canvas.draw_text(f'Request: {foodRequest[2]} Food', (600, 200), 20, 'White')
+        canvas.draw_text(f'{waterRequest[2]} Water', (675, 225), 20, 'White')
         canvas.draw_text(f'Total Food: {food}', (100, 500), 20, 'White')
+        canvas.draw_text(f'Total Water: {water}', (100, 525), 20, 'White')
     
     
     # Variables for left screen
@@ -237,13 +235,19 @@ def draw(canvas):
     foodDistance = 0
     foodDistances = [0,0,0,0]
         # Water Variables
-    global water
     global waterX
     global waterY
     global waterRotation
     waterDistance = 0
     waterDistances = [0,0,0,0]
     global health
+        # Gem Variables
+    global z
+    global gemX
+    global gemY
+    global gemRotation
+    global spawn
+    gemDistance = 0
     
     # Left Screen Code
     if left:
@@ -270,6 +274,32 @@ def draw(canvas):
                 astX[i] = random.randint(0,450)
             if health == 0:
                 endScene()
+        
+        # Gems
+        if z == 1:
+            canvas.draw_image(gems[spawn], (96 // 2, 96 // 2), (96, 96), (gemX, gemY), (30, 30), gemRotation)
+            gemY += 1
+            gemRotation += 0.01
+            gemDistance = math.sqrt((gemX-x)**2+(gemY-y)**2)
+            if gemDistance < 50:
+                if spawn == 0:
+                    inventory[spawn] = "Blue Gem Acquired"
+                elif spawn == 1:
+                    inventory[spawn] = "Pink Gem Acquired"
+                elif spawn == 2:
+                    inventory[spawn] = "Purple Gem Acquired"
+                elif spawn == 3:
+                    inventory[spawn] = "Red Gem Acquired"
+                z = 0
+                gemX = random.randint(0,450)
+                gemY = -30
+                print(inventory[spawn])
+            if gemY > 650:
+                z = 0
+                gemX = random.randint(0,450)
+                gemY = -30
+            
+                
         # Food
         for j in range(4):    
             canvas.draw_image(foodImg, (96 / 2, 96 / 2), (96, 96), (foodX[j], foodY[j]), (35, 35), foodRotation[j])
@@ -304,6 +334,7 @@ def draw(canvas):
     if right:
         canvas.draw_image(shipBackground, (900 // 2, 600 // 2), (900, 600), (450, 300), (900, 600))
         canvas.draw_circle([x,y],30,1,"white","white")
+        canvas.draw_text(f'Inventory: {inventory[0]} | {inventory[1]} | {inventory[2]} | {inventory[3]}', (100, 500), 20, 'White')
         if x < 0:
             newSceneMiddleFromRight()
     
@@ -320,9 +351,23 @@ asteroid = simplegui.load_image("https://media-hosting.imagekit.io//d32f66fb284d
 foodImg = simplegui.load_image("https://media-hosting.imagekit.io//c2e2671ce14440a6/Apple.png?Expires=1831660587&Key-Pair-Id=K2ZIVPTIP2VGHC&Signature=p4kJBKpF8PcKmNYh8uuQwDqbk08dpWtSRy2orA2HhXrawYZD7WxIG3tihQBqd-ZloMM8wj6mZGVVrNrUwbhSD-CZ4Cc1y9kBTukXYWToFovIUf0GOO5neGc3jqBuTa~P3zoNrASYbKImJeTMZ7faCAVCZFuWJIOvwAjSOzNuWiaPDdcCDpCm09a~Ms523KGKlusHVtdcKrtp6MQ7v4LvMN8APZdH6Y-Fx3x6bifjFgi3t-ULUaUuh5kQ7nNHDnOGxmWBT-x3~k72JMfESmuYDYBgdi1TUjxf9~A9wwnnuBlGgmH-MOT2V7L0Y5WmhewWYFfyjHdfw4V3NELLHbPoBQ__")
 waterImg = simplegui.load_image("https://media-hosting.imagekit.io//aa0be2c619154052/bottle_1_-removebg-preview.png?Expires=1831683845&Key-Pair-Id=K2ZIVPTIP2VGHC&Signature=vXa5oAE~Y6fRw8qS7RTD1Rt~xNc3ErWNCUBra0SJZ-Xk9ajGQ1HG2HidADT-rLUaPud~xJ4DFCJPbhvVYhpq0JEFQfETZCnsW88eyYPiD4B0C0aqW2-y4mSoXHOhiXsp5tvf286OVQ3YP8ZMnzUHfzaGhPulYyTi6DbPl30Rw23GYjuHad8UJQD9mlXFTalFI9Jxax~NxHntu-JCJs9k4EZjxdH~qXURqYailmDg1Dd39aIbtEm3N2AdDcs6b1m8zj00kRpIMJIqsOBMF1yQWrRYYh-i~z3WoGBKEiABAL5kTNNpVeaWQM2KdUe1CvWlQW-c2Fv2QMZ8bkl-ydZC9Q__")
 pressurePlate = simplegui.load_image("https://media-hosting.imagekit.io//921ad7c09e1e4d36/Screenshot%202025-01-16%20203741.png?Expires=1831685882&Key-Pair-Id=K2ZIVPTIP2VGHC&Signature=QBvOH3~a5b9ypgDAOZyfDpAbk3Ve0UgguITWVp6mGIW167at5cAfYaB3IBLa327TFyENLEdJD9HFwR3gTcsTCvj7mVg1-kP7t-G7yBpPfHzQzml4z1c3PjKbrGN1ViMfVhtWp6AKDr-FE8gpmqlVreSkc-Gl4-DxMMaIRx3O0I1RQm3Imt4jluKudPTdGKBLvD3hXvgqXIGCrgas9bK~jTeUCF3m7LrxygYYC8L5OMoQZKAef4bb9dujskBwQNd3kQXYxsj1u0CqJLNSxozvleZhp9UOWrJL2L0gTXgJ4JZ59kPqWROQ4j5ZH8NpN1nnmjICTqnxPdZpo7jz1wl3yw__")
+gem1 = simplegui.load_image("https://media-hosting.imagekit.io//fe916b26bb5f4f70/gem1(1).png?Expires=1831689618&Key-Pair-Id=K2ZIVPTIP2VGHC&Signature=hq4g14o5yI79Uv5ktvHt-S~2ZNLB46iOGofQjzh~hIrbnZCeA8qGCwIfen9NrzchbjM91yjTP8olgx7fW2K4oH3qNMhWet8b9n~LGN1it0WvRNf-VJ6gEJriGynhtxbHljs7Bu64BPJ6SVybNjQMNFtysP0ZnW6fcammGosYtygblByaqn8tX0zri3uaJ1m3G~x0i6o-qOuLWisE~uo4tyD0qTXIQp3AoLUe73ow6lzuIBXpuApb85S02PIYe0K3chgAFuaB2ESB1VRtjkGW9kS2O--X6TfniZ661nCEcHa0MGDY4OMDmRpWbWreFQXrqMI1fawtXP54hZ1oPWtDHg__")
+gem2 = simplegui.load_image("https://media-hosting.imagekit.io//aaa3e92b84e64c27/gem2(1).png?Expires=1831689618&Key-Pair-Id=K2ZIVPTIP2VGHC&Signature=O0ONIJI7iMwI9hgHoQvLlKvXueUkviQhfABRNRBksV8ARzGaOSlwdvEwUXFRjto8bQCo1rvfjSeCokjBbyogizepckyWajQloyZ4plKMdmeIm82T0e97Ds5aX2S9MOzu5mnU0Q2X1K1a8eJ5B6OPpiBK4~wMfPx8nyKXvaAkansNKMNQHFY8Z4bsBQjwyOZTrvS8FLBLfx88WQUJjuhHBETjXuz2RjU1v-tSme~Ct7yqtYP8RKWxjqMOXnsIhxXG0-HAIMe2CI8ei4Y497m60cEPCGHs728cXhaUPBF8~3OTZu5kjhxX9syhkYDt5cAUIIM9bNz-PMnUrf9P-z-fvg__")
+gem3 = simplegui.load_image("https://media-hosting.imagekit.io//48cb938aba554f01/gem3(1).png?Expires=1831689618&Key-Pair-Id=K2ZIVPTIP2VGHC&Signature=1i0ZvNedr8qN3JOnK3wTd5w3qf1Ho9HWWB60geT~aSBLSUAwSkgypviyY6Z22aGjJNajgzCWEGm00BnnCV4It1b~KQl3zK-1Dms~TQEzq8q5g-gvTHWYtmK7EiDn1NOqPS910pjmzWS-CSLOPo8A1CzjvsTaaTwaw4apQ~NdvihNqfcLho4KJftCbk4da1qZMuNkAq3PJqA4Aio876RerIKLGnuZzWMUTc~pGdLWvYN9WGZJgJbs08qJWnkarcCewtqg6DsmvhBmUa1KFsI0eykjHjN~NzFvY1fDFXQDjSKTl-gETxN4gnTCXcG68-LZOOSYJpCQrk86j2x7lwEstA__")
+gem4 = simplegui.load_image("https://media-hosting.imagekit.io//24613d44ecaf49d8/gem4(1).png?Expires=1831689618&Key-Pair-Id=K2ZIVPTIP2VGHC&Signature=xM8xthDR~Jbumf6Ek0CC1QSAvrr654ciPjtDjIecLwf0ByJ8GZ1dN1AswHYrNtNb3JyKJL1U6f5z~aLjcosJSZv4Eg-sWWqwwffC7s4WATHO~Cue9ifLI-KzX7lR0-Jh5XC~0WPIBK6Qqhrh-pixQqEFeklf1optqrbJp05uNvkzTS-oc39slcmjSf8xy77N6IWM7jNpbXJB0eVNtNCCGIDOofTEA8~6aJo8QwYhtJFqk~G6Fqt4LIS9FW6BOX2Do5NgiH-dUfVa8r~0yjeH3-BvDSRtwTmaHX7oXFuA22zMVHe5h~bt-y8To3gqeMKQzl92-blzYkyIyVeS5kyIpQ__")
+gems = [gem1,gem2,gem3,gem4]
+yellowAstro = simplegui.load_image("https://media-hosting.imagekit.io//3772cfe9cbfe4ce1/yellowAstronaut-removebg-preview.png?Expires=1831694135&Key-Pair-Id=K2ZIVPTIP2VGHC&Signature=fZEkDpBHksu8noiHRmRzcdJ2bfCRKofAtDuv8k7bra8ixHXkRYAg5jvnN91cebJTUJqaBIMB8ZPH2pwdbUj3TiBeiFwIS5B~3VJyNl2mH9ExAEzR--jzRQ3gS~xfumOcA5RlnIr7tpPSVI3zfQRmTtV2oupVAA85CmDOrLg-reDz0MlArYfOUbu0dAK~MWGyjCrjKtfdSiNRyBLs0NMWf0LtSeMLh0A0pM9nBt-q~LaNIjc9BORsMRORGxOzjmRcIgvQwvMAZMyRlt-NmnHwHoNMmeUzDYKV-Z9gP2feRoogSxbLoyxSGYOYrz96UVZZx5dyrdyfUKUYGzRG~qBbxw__")
+blueAstro = simplegui.load_image("https://media-hosting.imagekit.io//20516db3d84b476c/blueAstronaut-removebg-preview.png?Expires=1831694135&Key-Pair-Id=K2ZIVPTIP2VGHC&Signature=N2OnPpYEGg0oTES0ydzuoecGW6auuA~cu-7Md1uedAMgTMjgX1kec9YYmieAZJp35Axv3E8CmZsrTWFrHwz4zwk9b~t40BTMA3N40bVe7bKDZJgcNTgXiqtRymPH5Itn2ZaDL7ssyrG4KPY8ZBkegEW9An0emeOIsXZnirbcmCkxvnASye~D14y~O0Z425PauI2Am9r5RDuswUW3BZhNe82GgHXIz2zmWo-KHBhzWlQyvQf0BK1CY6pgvPZmXXEBVe6GL7hRjgCcro4v2-z3c6dJdH9iFsCJaRu5D2SgVPBAzbAhrQkGy3Y1ux6jVcou5Qn1k3Q1MbSFuhl4A6RXJw__")
+redAstro = simplegui.load_image("https://media-hosting.imagekit.io//6139a780c7024de3/redAstronaut-removebg-preview.png?Expires=1831694135&Key-Pair-Id=K2ZIVPTIP2VGHC&Signature=cLbFBFstSekvB6XDD12GupNcG0wHvqw~uYlprrHslqhJsIxdXWdBOzIeoIbAjm9icN0pLdSKEeY~PRFgBw-ibsydC06Zk-FUn2575oYG0eJeR~zeNu8ukyhn3cBT8WtYtZA74wibGJQv94oeTDPBX-irIz-arElr3u9RZ6~O71Rsa1Xskc~4OedPZXibw1jkDtrbLt~Z~8uwbdOitgEaLocBFRceYdwcuQDkmZPo2WAqaE7lq7UNQTqiKXrXp-HzNp5r-04aSmY1mEmO~FZm6mW1Dz7niyB1ipU2nBFORCVPWZKs0DOZZYwhvju6cmyfUyTgRJRBQ-5JXga6LI3sZQ__")
+characterUp = simplegui.load_image("https://media-hosting.imagekit.io//29b244212c774ba4/upspaceman.png?Expires=1831694745&Key-Pair-Id=K2ZIVPTIP2VGHC&Signature=eBp2tteXeTKV2-Abt13b0pQYDryiCdqrQAxrILJKfH1jsbWsjCq4pNmmUcuulH5IkiImGc2lQxpLWGEWgdXnLjMT2HnAbuXF8W2-uEGMmyBSKUIDW-a~rg7GeDKHv~I3~cYaUd-bL7CLIkh2zd2K-lQsiqQO9g6-N0nin6~ynjKk0dhH-HEmLMC64GddAIOTtXAy~TIpwEgUklOuPidIcGxrzZaw3qKV3oQqqZWRjDNQUQkuhNPiR3xJFxKU-bBQ7N-SfbSE9olikf1Bi7hULMTGzvPbZs698Pl-GUf-uFf5B5xUOf1NOvdw2eApVdXkC9fcRE~e-B5JJpA9hT9GYA__")
+characterDown = simplegui.load_image("https://media-hosting.imagekit.io//50ab470f5f9f476e/downspaceman.png?Expires=1831694745&Key-Pair-Id=K2ZIVPTIP2VGHC&Signature=PIuROY9HLqZF9V4EyPQWCY1NVXhHhf2J-jjUm0l3leRcvHY0Y4MPD46-0TQ~mypnZ7bEaslJiy~TyyEZ5Ta8veJkSLWRwJugtbKf6~Q1p4yz74qQcg6eO54JI71K889VVQzofBag~bT-j9Sn-Z0sCBg4D3A~7nlFn-74C5tDFUO81KVbyeSDIG2lScazGc9np0PpOhbC7o0DC7KtBRxjFmOHnayA~26s-Grkzsq1WFO7-a~aOZ9EPSGSwAwocuMLQveD-b~VItyhGZtEV6I6B0QxPRlpd5TCtJfpsGJFEqMUpyGN1kwmlW8zMMoi69wdY7k5SO~5aKrAuiV2f0gt8g__")
+characterLeft = simplegui.load_image("https://media-hosting.imagekit.io//8653378712664045/leftspaceman.png?Expires=1831694745&Key-Pair-Id=K2ZIVPTIP2VGHC&Signature=zPing5FKemyXYzSldDsXRAbQNfyfOVlfv89UDiq9XsJpjQ6LxIJzvteh2HBcgPZ4qavD9FP3auzAE8rI6YSclekexNLFuMfkzUuv1NeKYZvrOuKByPeCZ1QsEYhZqAkW~p-J7P~cEmGjzgs70t8YH5FIsNZUnRsGPZitPdHDETA13Wu5U04cGH0qGc4LwMcYmbOdSqupFtfesdSua7-vFT~00eMNNtf4mY97D6YuxWfCsRIGVl1GqLpC~yTozs2eXDTlFm4tIKUdhBIVN8t1T4VC7wg17Kr5X4NWA1p9QTOFhQ5chnVKCZFqaTGcvgVfjyI0PVQ~vXpZzPLV9T1G0w__")
+characterRight = simplegui.load_image("https://media-hosting.imagekit.io//6160d96ef85a422c/rightspaceman.png?Expires=1831694745&Key-Pair-Id=K2ZIVPTIP2VGHC&Signature=nAXYnOobUOTVXuJt2B3zoUTdYgkHhmsx0AxAofr3o-s2tAD9kzoP~L-BspuJPbfIfCPBLARzqTb6QIvvJSpXjr~RdSRXPHGSoQfmDZdHvxn96PSAhCDO41xu3Klq5DxvLDZWJ7Cu301tjN-06wmJBORzZDdqetVAaJZ-qGclJX8wEKG~FMYvHF~Q9Aatd2TD86LZB7szMHnm7MMUQcxpabTdSUuuyQOB~Jpa9cvUvudPQ5qmECKCNzZWd-kXg~BaKzuItZco0~gRqvFoZSR72EPHkM24krILYE6nF-OHVbrBYYV7AJzxyo5HbZjuKdf2wBBW19ENOzSVBJykkT2G1Q__")
+
 # Create a frame and assign callbacks to event handlers
 frame = simplegui.create_frame("Home", 900, 600)
-timer = simplegui.create_timer(10000, satisfactionLevel)
+timer = simplegui.create_timer(random.randint(5000,15000), satisfactionLevel)
+gemTimer = simplegui.create_timer(10000, gemSpawn)
 frame.add_button("Start Game", start)
 frame.set_keydown_handler(keydown)
 frame.set_keyup_handler(keyup)
@@ -333,3 +378,4 @@ frame.set_draw_handler(draw)
 # Start the frame animation
 frame.start()
 timer.start()
+gemTimer.start()
