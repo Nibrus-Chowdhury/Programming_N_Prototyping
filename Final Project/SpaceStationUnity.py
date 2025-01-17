@@ -1,9 +1,3 @@
-# CodeSkulptor runs Python programs in your browser.
-# Click the upper left button to run this simple demo.
-
-# CodeSkulptor is tested to run in recent versions of
-# Chrome, Firefox, Safari, and Edge.
-
 import simplegui
 import random
 import math
@@ -26,7 +20,8 @@ left = False
 middle = False
 right = False
 endScreen = False
-
+winScreen = False
+endScreen2 = False
 # Asteroid Variables
 astX = []
 astY = []
@@ -68,8 +63,25 @@ waterRequest = [8, 12, 13]
 def start():
     global middle
     global startScreen
-    startScreen = not startScreen
-    middle = not middle
+    global endScreen
+    global winScreen
+    global health
+    global inventory
+    global food
+    global water
+    global satisfaction
+    global endScreen2
+    startScreen = False
+    endScreen = False
+    endScreen2 = False
+    winScreen = False
+    middle = True
+    health = 100
+    inventory = ["No Blue Gem","No Pink Gem","No Purple Gem","No Red Gem"]
+    food = 0
+    water = 0
+    satisfaction = [100,100,100]
+    
 
 def keydown(key):
     """
@@ -86,44 +98,60 @@ def keyup(key):
     global current_key
     current_key = ' '
 
+def winScene():
+    global winScreen
+    global right
+    right = False
+    winScreen = True
+    
 def newSceneLeft():
     global x
     global left
     global middle
     x = 900
-    left = not left
-    middle = not middle
+    left = True
+    middle = False
     
 def newSceneMiddleFromLeft():
     global x
     global left
     global middle
     x = 0
-    left = not left
-    middle = not middle   
+    left = False
+    middle = True   
 
 def newSceneMiddleFromRight():
     global x
     global right
     global middle
     x = 900
-    right = not right
-    middle = not middle
+    right = False
+    middle = True
     
 def newSceneRight():
     global x
     global right
     global middle
     x = 0
-    right = not right
-    middle = not middle
+    right = True
+    middle = False
     
 def endScene():
     global left
     global endScreen
-    left = not left
-    endScreen = not endScreen
+    left = False
+    endScreen = True
 
+def endScene2():
+    global endScreen2
+    global left
+    global right
+    global middle
+    endScreen2 = True
+    left = False
+    right = False
+    middle = False
+    
 def satisfactionLevel():
     global satisfaction
     global right
@@ -131,12 +159,9 @@ def satisfactionLevel():
     global left
     global endScene
     for i in range(3):
-        satisfaction[i] -= random.randint(1,5)
+        satisfaction[i] -= random.randint(1,10)
         if satisfaction[i] <= 0:
-            right = False
-            left = False
-            middle = False
-            endScene = True
+            endScene2()
         if satisfaction[i] > 100:
             satisfaction[i] = 100
             
@@ -146,7 +171,6 @@ def gemSpawn():
     z = 0
     z += 1
     spawn = random.randint(0,3)
-    print(z)
             
 
 # Handler to draw on canvas
@@ -171,10 +195,12 @@ def draw(canvas):
         canvas.draw_text('- Split resources among crew members', (75, 345), 15, 'White')
         canvas.draw_text('- Find the 4 required gems in space to fix your ship core', (75, 360), 15, 'White')
         canvas.draw_text('Mechanics:', (550, 300), 20, 'White')
-        canvas.draw_text('- Go left and right for different ship areas', (575, 330), 15, 'White')
-        canvas.draw_text('- Collect food floating in space', (575, 345), 15, 'White')
-        canvas.draw_text('- Collect water floating in space', (575, 360), 15, 'White')
-        canvas.draw_text('- Avoid asteroids in space', (575, 375), 15, 'White')
+        canvas.draw_text('- Go all the way left and right for different ship areas', (550, 330), 15, 'White')
+        canvas.draw_text('- Collect food floating in space', (550, 345), 15, 'White')
+        canvas.draw_text('- Collect water floating in space', (550, 360), 15, 'White')
+        canvas.draw_text('- Avoid asteroids in space', (550, 375), 15, 'White')
+        canvas.draw_text('- Gems spawn randomly in space area', (550, 390), 15, 'White')
+        canvas.draw_text('- You can see what gems you have in the ship core room', (550, 405), 15, 'White')
     # Variables for middle screen
     global food
     global water
@@ -200,26 +226,26 @@ def draw(canvas):
                     food = food - foodRequest[i]
                     water = water - waterRequest[i]
                     satisfaction[i] += 10
-                    foodRequest[i] = random.randint(10,20)
-                    waterRequest[i] = random.randint(10,20)
+                    foodRequest[i] = random.randint(5,15)
+                    waterRequest[i] = random.randint(5,15)
         
         # Character Movement
         if current_key == "W" or current_key == "&":
             g = 1
             canvas.draw_image(characterUp, (315 // 2, 315 // 2), (315, 315), (x, y), (85, 85))
-            y -= 2
+            y -= 4
         elif current_key == "S" or current_key == "(":
             g = 2
             canvas.draw_image(characterDown, (315 // 2, 315 // 2), (315, 315), (x, y), (85, 85))
-            y += 2
+            y += 4
         elif current_key == "A" or current_key == "%":
             g = 3
             canvas.draw_image(characterLeft, (315 // 2, 315 // 2), (315, 315), (x, y), (85, 85))
-            x -= 2
+            x -= 4
         elif current_key == "D" or current_key == "'":
             g = 4
             canvas.draw_image(characterRight, (315 // 2, 315 // 2), (315, 315), (x, y), (85, 85))
-            x += 2
+            x += 4
         if g == 1:
             canvas.draw_image(characterUp, (315 // 2, 315 // 2), (315, 315), (x, y), (85, 85))
         elif g == 2:
@@ -291,19 +317,19 @@ def draw(canvas):
         if current_key == "W" or current_key == "&":
             g = 1
             canvas.draw_image(characterUp, (315 // 2, 315 // 2), (315, 315), (x, y), (85, 85))
-            y -= 2
+            y -= 4
         elif current_key == "S" or current_key == "(":
             g = 2
             canvas.draw_image(characterDown, (315 // 2, 315 // 2), (315, 315), (x, y), (85, 85))
-            y += 2
+            y += 4
         elif current_key == "A" or current_key == "%":
             g = 3
             canvas.draw_image(characterLeft, (315 // 2, 315 // 2), (315, 315), (x, y), (85, 85))
-            x -= 2
+            x -= 4
         elif current_key == "D" or current_key == "'":
             g = 4
             canvas.draw_image(characterRight, (315 // 2, 315 // 2), (315, 315), (x, y), (85, 85))
-            x += 2
+            x += 4
         if g == 1:
             canvas.draw_image(characterUp, (315 // 2, 315 // 2), (315, 315), (x, y), (85, 85))
         elif g == 2:
@@ -396,19 +422,19 @@ def draw(canvas):
         if current_key == "W" or current_key == "&":
             g = 1
             canvas.draw_image(characterUp, (315 // 2, 315 // 2), (315, 315), (x, y), (85, 85))
-            y -= 2
+            y -= 4
         elif current_key == "S" or current_key == "(":
             g = 2
             canvas.draw_image(characterDown, (315 // 2, 315 // 2), (315, 315), (x, y), (85, 85))
-            y += 2
+            y += 4
         elif current_key == "A" or current_key == "%":
             g = 3
             canvas.draw_image(characterLeft, (315 // 2, 315 // 2), (315, 315), (x, y), (85, 85))
-            x -= 2
+            x -= 4
         elif current_key == "D" or current_key == "'":
             g = 4
             canvas.draw_image(characterRight, (315 // 2, 315 // 2), (315, 315), (x, y), (85, 85))
-            x += 2
+            x += 4
         if g == 1:
             canvas.draw_image(characterUp, (315 // 2, 315 // 2), (315, 315), (x, y), (85, 85))
         elif g == 2:
@@ -420,12 +446,20 @@ def draw(canvas):
         if x < 0:
             newSceneMiddleFromRight()
         if inventory[0] == "Blue Gem Acquired" and inventory[1] == "Pink Gem Acquired" and inventory[2] == "Purple Gem Acquired" and inventory[3] == "Red Gem Acquired":
-            canvas.draw_polygon([(0,0),(900,0),(900,600),(0,600)],1,'black','black')
-            canvas.draw_text('You Fixed the Engine!', (300, 300), 50, 'white')
+            endScene()
     
     
     if endScreen:
         canvas.draw_text('Game Over', (300, 300), 50, 'white')
+        canvas.draw_text('You died to Asteriods',(350,350), 20, 'white')
+        
+    if endScreen2:
+        canvas.draw_text('Game Over', (300, 300), 50, 'white')
+        canvas.draw_text('You failed to keep everyone satisfied there is chaos',(300,350), 20, 'white')
+        
+    if winScreen:
+        canvas.draw_text('You Win!', (300, 300), 50, 'white')
+        canvas.draw_text('You successfully fixed your ship and kept everyone satisfied!',(250,350), 20, 'white')
 
 
 
@@ -452,8 +486,8 @@ shipCore = simplegui.load_image("https://media-hosting.imagekit.io//6cb3fd9fcfa6
 
 # Create a frame and assign callbacks to event handlers
 frame = simplegui.create_frame("Home", 900, 600)
-timer = simplegui.create_timer(random.randint(5000,15000), satisfactionLevel)
-gemTimer = simplegui.create_timer(random.randint(25000,45000), gemSpawn)
+timer = simplegui.create_timer(random.randint(2000,8000), satisfactionLevel)
+gemTimer = simplegui.create_timer(random.randint(10000,15000), gemSpawn)
 frame.add_button("Start Game", start)
 frame.set_keydown_handler(keydown)
 frame.set_keyup_handler(keyup)
