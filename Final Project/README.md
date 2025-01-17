@@ -12,3 +12,5 @@
 - Win by satisfying the crew as well as getting all the gems and fixing the core
 - Lose when your health reaches 0
 - Lose when your crews satisfaction reaches 0
+
+To start the game you click **Start Game Button**
