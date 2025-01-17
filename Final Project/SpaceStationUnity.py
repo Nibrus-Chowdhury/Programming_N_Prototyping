@@ -12,7 +12,7 @@ z = 0
 g = 0
 # Resources
 health = 100
-inventory = ["No Blue Gem","No Pink Gem","No Purple Gem","No Pink Gem"]
+inventory = ["No Blue Gem","No Pink Gem","No Purple Gem","No Red Gem"]
 food = 0
 water = 0
 
