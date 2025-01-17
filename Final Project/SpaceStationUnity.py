@@ -56,8 +56,8 @@ current_key = ' '
 
 # Middle Screen Initialization Variables
 satisfaction = [100,100,100]
-foodRequest = [12,24,15]
-waterRequest = [8, 12, 13]
+foodRequest = [5,8,7]
+waterRequest = [8, 3, 5]
 
 # Handler
 def start():
@@ -103,6 +103,7 @@ def winScene():
     global right
     right = False
     winScreen = True
+    satisfaction = [100,100,100]
     
 def newSceneLeft():
     global x
@@ -141,6 +142,7 @@ def endScene():
     global endScreen
     left = False
     endScreen = True
+    satisfaction = [100,100,100]
 
 def endScene2():
     global endScreen2
@@ -151,6 +153,7 @@ def endScene2():
     left = False
     right = False
     middle = False
+    satisfaction = [100,100,100]
     
 def satisfactionLevel():
     global satisfaction
@@ -201,6 +204,10 @@ def draw(canvas):
         canvas.draw_text('- Avoid asteroids in space', (550, 375), 15, 'White')
         canvas.draw_text('- Gems spawn randomly in space area', (550, 390), 15, 'White')
         canvas.draw_text('- You can see what gems you have in the ship core room', (550, 405), 15, 'White')
+        canvas.draw_text('Win/Lose Condition:', (50, 500), 20, 'White')
+        canvas.draw_text('- You lose if you do not keep everyone satisfied', (100, 525), 15, 'White')
+        canvas.draw_text('- You lose if your health reaches 0', (100, 540), 15, 'White')
+        canvas.draw_text('- You win if you collect all gems, keep everyone satisfied, and go to ship core room', (100, 555), 15, 'White')
     # Variables for middle screen
     global food
     global water
@@ -226,26 +233,26 @@ def draw(canvas):
                     food = food - foodRequest[i]
                     water = water - waterRequest[i]
                     satisfaction[i] += 10
-                    foodRequest[i] = random.randint(5,15)
-                    waterRequest[i] = random.randint(5,15)
+                    foodRequest[i] = random.randint(5,8)
+                    waterRequest[i] = random.randint(5,8)
         
         # Character Movement
         if current_key == "W" or current_key == "&":
             g = 1
             canvas.draw_image(characterUp, (315 // 2, 315 // 2), (315, 315), (x, y), (85, 85))
-            y -= 4
+            y -= 5
         elif current_key == "S" or current_key == "(":
             g = 2
             canvas.draw_image(characterDown, (315 // 2, 315 // 2), (315, 315), (x, y), (85, 85))
-            y += 4
+            y += 5
         elif current_key == "A" or current_key == "%":
             g = 3
             canvas.draw_image(characterLeft, (315 // 2, 315 // 2), (315, 315), (x, y), (85, 85))
-            x -= 4
+            x -= 5
         elif current_key == "D" or current_key == "'":
             g = 4
             canvas.draw_image(characterRight, (315 // 2, 315 // 2), (315, 315), (x, y), (85, 85))
-            x += 4
+            x += 5
         if g == 1:
             canvas.draw_image(characterUp, (315 // 2, 315 // 2), (315, 315), (x, y), (85, 85))
         elif g == 2:
@@ -446,7 +453,7 @@ def draw(canvas):
         if x < 0:
             newSceneMiddleFromRight()
         if inventory[0] == "Blue Gem Acquired" and inventory[1] == "Pink Gem Acquired" and inventory[2] == "Purple Gem Acquired" and inventory[3] == "Red Gem Acquired":
-            endScene()
+            winScene()
     
     
     if endScreen:
